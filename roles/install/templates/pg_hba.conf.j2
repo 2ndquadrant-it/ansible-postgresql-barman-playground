@@ -1,0 +1,6 @@
+
+## IPv4 connections
+host    all             all             {{ ansible_eth1.ipv4.network }}/24        {{ pg_hba_method }}
+
+## Replication connections
+host    replication     all             {{ ansible_eth1.ipv4.network }}/24        {{ pg_hba_method }}

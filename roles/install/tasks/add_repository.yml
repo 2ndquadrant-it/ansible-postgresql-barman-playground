@@ -1,0 +1,58 @@
+---
+- name: Ensure CA certificates are available
+  package:
+    name: ca-certificates
+    state: present
+
+#------------------------------------------------------------------------------
+# 2ndQuadrant repository
+#------------------------------------------------------------------------------
+- name: Check if 2ndQuadrant repository is present
+  stat:
+    path: "{{ repo_2ndq_file }}"
+  register: repo_file
+
+- name: Add 2ndQuadrant General Public repository
+  shell: curl {{ repo_2ndq }} | bash
+  when: not repo_file.stat.exists
+  args:
+    warn: false
+
+#------------------------------------------------------------------------------
+# RPM repositories
+#------------------------------------------------------------------------------
+- block:
+    - name: Add EPEL repository
+      yum:
+        name: "{{ epel_repo }}"
+        state: present
+
+    - name: Add PostgreSQL Yum repository
+      yum:
+        name: "{{ pg_rpm_repo }}"
+        state: present
+
+    - name: Update repo cache and upgrade packages (RPM)
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes
+  when: ansible_facts['os_family'] == "RedHat"
+
+#------------------------------------------------------------------------------
+# APT repository
+#------------------------------------------------------------------------------
+- block:
+    - name: Add PostgreSQL Apt repository key
+      apt_key:
+        url: "{{ pg_apt_repo_key }}"
+
+    - name: Add PostgreSQL Apt repository
+      apt_repository:
+        repo: "{{ pg_apt_repo }}"
+
+    - name: Update repo cache and upgrade packages (DEB)
+      apt:
+        upgrade: dist
+        update_cache: yes
+  when: ansible_facts['os_family'] == "Debian"

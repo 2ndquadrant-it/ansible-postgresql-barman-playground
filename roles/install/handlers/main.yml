@@ -1,0 +1,46 @@
+---
+#------------------------------------------------------------------------------
+# PostgreSQL service
+#------------------------------------------------------------------------------
+- name: start postgresql
+  service:
+    name: "{{ pg_service }}"
+    state: started
+
+
+- name: stop postgresql
+  service:
+    name: "{{ pg_service }}"
+    state: stop
+
+
+- name: restart postgresql
+  service:
+    name: "{{ pg_service }}"
+    state: restarted
+
+#------------------------------------------------------------------------------
+# OS services
+#------------------------------------------------------------------------------
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+
+- name: run rc.local
+  shell: /etc/rc.local
+
+#------------------------------------------------------------------------------
+# SELinux setup
+#------------------------------------------------------------------------------
+- name: SELinux permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+
+- name: SELinux enforcing
+  selinux:
+    policy: targeted
+    state: enforcing

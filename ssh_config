@@ -1,0 +1,16 @@
+Host *
+  User vagrant
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+
+Host paul
+  HostName 192.168.33.10
+
+Host john
+  HostName 192.168.33.11
+
+Host george
+  HostName 192.168.33.12
+
+Host ringo
+  HostName 192.168.33.13

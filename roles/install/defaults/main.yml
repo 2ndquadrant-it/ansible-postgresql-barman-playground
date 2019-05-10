@@ -1,0 +1,70 @@
+---
+#------------------------------------------------------------------------------
+# Basic PostgreSQL settings
+#------------------------------------------------------------------------------
+# PostgreSQL version
+pgversion: 11
+pgversion_plain: "{{ pgversion | replace('.', '') }}"
+
+# PostgreSQL port
+pg_port: 5432
+
+# Directories & cluster
+pg_log_file: /var/log/postgres.log
+
+# Locale
+pg_encoding: UTF-8
+pg_locale: en_US.UTF-8
+pg_timezone: Europe/London
+
+# Users & groups
+pg_user: postgres
+pg_group: "{{ pg_user }}"
+
+barman_user: barman
+
+replication_user:
+  postgres: repuser
+  barman: streaming_barman
+
+# pg_hba.conf
+pg_hba_method: md5
+
+#------------------------------------------------------------------------------
+# postgresql.conf variables
+#------------------------------------------------------------------------------
+postgresql_conf: |
+    ### network settings
+    listen_addresses = '*'
+
+    ### memory settings
+    shared_buffers = 64MB
+    checkpoint_completion_target = 0.9
+
+    ### base log settings
+    log_destination = syslog
+    syslog_facility = LOCAL0
+    syslog_ident = postgres
+
+    ### log customizations for better monitoring
+    logging_collector = on
+    log_checkpoints = on
+    log_lock_waits = on
+    log_min_duration_statement = 1000
+    log_line_prefix = 'u=[%u] db=[%d] app=[%a] c=[%h] s=[%c:%l] tx=[%v:%x] '
+    log_statement = 'ddl'
+    log_temp_files = 1024
+    log_autovacuum_min_duration = '1s'
+
+    ### pg_stat_statements
+    shared_preload_libraries = pg_stat_statements
+    pg_stat_statements.max = 1000
+    pg_stat_statements.track = all
+
+    ### hot-standby settings
+    wal_level = logical
+    hot_standby_feedback = on
+
+    ### wal archiving
+    archive_mode = on
+    archive_command = '/bin/true'

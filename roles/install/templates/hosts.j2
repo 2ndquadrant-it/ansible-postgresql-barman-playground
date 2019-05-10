@@ -1,0 +1,4 @@
+
+{% for host in ansible_play_hosts -%}
+  {{ hostvars[host]['ansible_eth1']['ipv4']['address'] }} {{ hostvars[host]['ansible_fqdn'] }} {{ hostvars[host]['ansible_hostname'] }}
+{% endfor %}

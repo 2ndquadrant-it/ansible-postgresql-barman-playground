@@ -1,0 +1,45 @@
+---
+#------------------------------------------------------------------------------
+# Repositories for PostgreSQL and others
+#------------------------------------------------------------------------------
+# 2ndQuadrant's General Public repository
+repo_2ndq_maturity_level: release
+repo_2ndq_file: /etc/apt/sources.list.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level }}.list
+repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level }}/get/deb
+
+# PostgreSQL Apt repository
+pg_apt_repo_key: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+pg_apt_repo_url: http://apt.postgresql.org/pub/repos/apt/
+pg_apt_repo: "deb {{ pg_apt_repo_url }} {{ ansible_distribution_release | lower }}-pgdg main {{ pgversion }}"
+
+#------------------------------------------------------------------------------
+# PostgreSQL and dependency packages to be installed
+#------------------------------------------------------------------------------
+pg_packages:
+  - "postgresql-{{ pgversion }}"
+  - "postgresql-client-{{ pgversion }}"
+  - "postgresql-contrib-{{ pgversion }}"
+  - barman-cli
+  - vim
+
+barman_packages:
+  - barman
+  - "postgresql-client-{{ pgversion }}"
+  - vim
+
+dependency_packages:
+  - python-psycopg2
+  - python-pycurl
+  - locales
+
+#------------------------------------------------------------------------------
+# PostgreSQL service name
+#------------------------------------------------------------------------------
+pg_service: postgresql
+
+#------------------------------------------------------------------------------
+# PostgreSQL bin directories
+#------------------------------------------------------------------------------
+pg_bin_directory: /usr/bin
+pg_data_directory: "/var/lib/postgresql/{{ pgversion }}/main"
+pg_conf_directory: "/etc/postgresql/{{ pgversion }}/main"

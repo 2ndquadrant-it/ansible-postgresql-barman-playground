@@ -1,0 +1,23 @@
+---
+- name: Include variables accordingly to OS
+  include_vars:
+    file: "{{ ansible_os_family | lower }}.yml"
+  tags: always
+
+- name: Add repositories
+  include_tasks: add_repository.yml
+
+- name: Install PostgreSQL & Barman
+  include_tasks: install.yml
+
+- name: Configure PostgreSQL servers
+  include_tasks: configure_postgres_{{ ansible_os_family | lower }}.yml
+  when: inventory_hostname in groups['postgres']
+
+- name: Configure system (access and SSH)
+  include_tasks:
+    file: configure_system.yml
+    apply:
+      tags:
+        - system
+  tags: system

@@ -1,0 +1,87 @@
+---
+#------------------------------------------------------------------------------
+# Log settings - rsyslog and logrotate
+#------------------------------------------------------------------------------
+- name: Ensure postgres.log exists | RPM
+  file:
+    path: "{{ pg_log_file }}"
+    owner: "{{ pg_user }}"
+    group: "{{ pg_group }}"
+    mode: 0640
+    state: touch
+
+- name: Adjust rsyslog settings for PostgreSQL | RPM
+  copy:
+    src: 30-rsyslog-postgresql.conf
+    dest: /etc/rsyslog.d/
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Adjust logrotate settings for PostgreSQL | RPM
+  copy:
+    src: "logrotate-postgresql-{{ ansible_os_family | lower }}"
+    dest: /etc/logrotate.d/logrotate-postgresql
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart rsyslog service | RPM
+  service:
+    name: rsyslog
+    state: restarted
+    enabled: yes
+
+#------------------------------------------------------------------------------
+# Cluster creation
+#------------------------------------------------------------------------------
+- name: Check if PGDATA directory is initialized
+  stat:
+    path: "{{ pg_data_directory }}/PG_VERSION"
+  register: pgdata_initialized
+
+- name: Create the new cluster | RPM
+  shell: "{{ pg_bin_directory }}/initdb --data-checksums -D {{ pg_data_directory }}"
+  become: yes
+  become_user: "postgres"
+  args:
+    executable: /bin/bash
+  when: not pgdata_initialized.stat.exists
+
+#------------------------------------------------------------------------------
+# postgresql.conf config
+#------------------------------------------------------------------------------
+- name: Adjust postgresql.conf | RPM
+  blockinfile:
+    path: "{{ pg_conf_directory }}/postgresql.conf"
+    insertafter: EOF
+    block: |
+      {{ postgresql_conf }}
+
+#------------------------------------------------------------------------------
+# pg_hba.conf config
+#------------------------------------------------------------------------------
+- name: Append config to pg_hba.conf
+  blockinfile:
+    path: "{{ pg_conf_directory }}/pg_hba.conf"
+    insertafter: EOF
+    block: "{{ lookup('template', 'pg_hba.conf.j2') }}"
+
+#------------------------------------------------------------------------------
+# PostgreSQL service
+#------------------------------------------------------------------------------
+- name: Start and enable the PostgreSQL service | RPM
+  service:
+    name: "{{ pg_service }}"
+    state: started
+    enabled: yes
+
+#------------------------------------------------------------------------------
+# pg_stat_statements
+#------------------------------------------------------------------------------
+- name: Install pg_stat_statements in postgres database | RPM
+  become: yes
+  become_user: postgres
+  postgresql_ext:
+    name: pg_stat_statements
+    db: postgres

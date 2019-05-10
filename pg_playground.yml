@@ -1,0 +1,9 @@
+---
+- name: 'PostgreSQL & Barman Playground'
+  hosts: postgres:barman
+  become: yes
+
+  tasks:
+    - name: Install repos and packages
+      import_role:
+        name: install

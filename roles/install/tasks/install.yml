@@ -1,0 +1,18 @@
+---
+- block:
+    - name: Ensure dependencies are installed
+      package:
+        name: "{{ dependency_packages }}"
+        state: latest
+
+    - name: Install PostgreSQL
+      package:
+        name: "{{ pg_packages }}"
+        state: present
+  when: inventory_hostname in groups['postgres']
+
+- name: Install Barman
+  package:
+    name: "{{ barman_packages }}"
+    state: present
+  when: inventory_hostname in groups['barman']

@@ -1,0 +1,10 @@
+/var/log/postgres.log {
+    daily
+    rotate 14
+    compress
+    create 0640 syslog adm
+    sharedscripts
+    postrotate
+        invoke-rc.d rsyslog rotate > /dev/null
+    endscript
+}

@@ -1,0 +1,66 @@
+---
+#------------------------------------------------------------------------------
+# Repositories for PostgreSQL and others
+#------------------------------------------------------------------------------
+# 2ndQuadrant's General Public repository
+repo_2ndq_maturity_level: release
+repo_2ndq_file: /etc/yum.repos.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level }}-pg{{ pgversion }}.repo
+repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level }}/get/{{ pgversion }}/rpm
+
+# EPEL
+epel_repo: epel-release
+
+# PostgreSQL Yum Repository
+pg_rpm_repo_package_release:
+  redhat: {
+      9.6: 3,
+      10: 2,
+      11: 2,
+  }
+  centos: {
+      9.6: 3,
+      10: 2,
+      11: 2,
+  }
+
+pg_rpm_repo_package: "pgdg-{{ ansible_distribution | lower }}{{ pgversion_plain }}-{{ pgversion }}-{{ pg_rpm_repo_package_release.get(ansible_distribution | lower).get(pgversion) }}.noarch.rpm"
+
+pg_rpm_repo_url: https://download.postgresql.org/pub/repos/yum
+pg_rpm_repo: "{{ pg_rpm_repo_url }}/{{ pgversion }}/{{ ansible_os_family | lower }}/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/{{ pg_rpm_repo_package }}"
+
+#------------------------------------------------------------------------------
+# PostgreSQL and dependency packages to be installed
+#------------------------------------------------------------------------------
+pg_packages:
+  - "postgresql{{ pgversion_plain }}"
+  - "postgresql{{ pgversion_plain }}-server"
+  - "postgresql{{ pgversion_plain }}-contrib"
+  - "postgresql{{ pgversion_plain }}-devel"
+  - barman-cli
+  - vim
+
+barman_packages:
+  - barman
+  - "postgresql{{ pgversion_plain }}"
+  - vim
+
+dependency_packages:
+  - python-psycopg2
+  - python-pycurl
+  - glibc-common
+  - libselinux-python
+  - policycoreutils-python
+  - rsyslog
+  - logrotate
+
+#------------------------------------------------------------------------------
+# PostgreSQL service
+#------------------------------------------------------------------------------
+pg_service: postgresql-{{ pgversion }}
+
+#------------------------------------------------------------------------------
+# PostgreSQL directories
+#------------------------------------------------------------------------------
+pg_bin_directory: "/usr/pgsql-{{ pgversion }}/bin"
+pg_data_directory: "/var/lib/pgsql/{{ pgversion }}/data"
+pg_conf_directory: "{{ pg_data_directory }}"
