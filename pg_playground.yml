@@ -1,6 +1,6 @@
 ---
 - name: 'PostgreSQL & Barman Playground'
-  hosts: postgres:barman
+  hosts: all
   become: yes
 
   tasks:
