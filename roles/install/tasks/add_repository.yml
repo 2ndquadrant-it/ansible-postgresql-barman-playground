@@ -31,12 +31,13 @@
       yum:
         name: "{{ pg_rpm_repo }}"
         state: present
-
-    - name: Update repo cache and upgrade packages (RPM)
-      yum:
-        name: '*'
-        state: latest
         update_cache: yes
+
+    # - name: Update repo cache and upgrade packages (RPM)
+    #   yum:
+    #     name: '*'
+    #     state: latest
+    #     update_cache: yes
   when: ansible_facts['os_family'] == "RedHat"
 
 #------------------------------------------------------------------------------
