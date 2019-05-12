@@ -18,12 +18,14 @@ pg_packages:
   - "postgresql-{{ pgversion }}"
   - "postgresql-client-{{ pgversion }}"
   - "postgresql-contrib-{{ pgversion }}"
+  - rsync
   - barman-cli
   - vim
 
 barman_packages:
   - barman
   - "postgresql-client-{{ pgversion }}"
+  - rsync
   - vim
 
 dependency_packages:

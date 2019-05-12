@@ -35,12 +35,14 @@ pg_packages:
   - "postgresql{{ pgversion_plain }}-server"
   - "postgresql{{ pgversion_plain }}-contrib"
   - "postgresql{{ pgversion_plain }}-devel"
+  - rsync
   - barman-cli
   - vim
 
 barman_packages:
   - barman
   - "postgresql{{ pgversion_plain }}"
+  - rsync
   - vim
 
 dependency_packages:
