@@ -1,0 +1,5 @@
+.vagrant
+.DS_Store
+.pyc
+.python-version
+__pycache__
