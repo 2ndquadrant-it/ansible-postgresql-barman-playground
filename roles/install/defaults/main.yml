@@ -5,6 +5,7 @@
 # PostgreSQL version
 pgversion: 11
 pgversion_plain: "{{ pgversion | replace('.', '') }}"
+repo_2ndq_maturity_level: release
 
 # PostgreSQL port
 pg_port: 5432

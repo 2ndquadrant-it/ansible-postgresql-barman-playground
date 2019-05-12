@@ -3,7 +3,6 @@
 # Repositories for PostgreSQL and others
 #------------------------------------------------------------------------------
 # 2ndQuadrant's General Public repository
-repo_2ndq_maturity_level: release
 repo_2ndq_file: /etc/yum.repos.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level }}-pg{{ pgversion }}.repo
 repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level }}/get/{{ pgversion }}/rpm
 
