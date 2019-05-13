@@ -1,0 +1,77 @@
+---
+#------------------------------------------------------------------------------
+# Adjust /etc/hosts
+#------------------------------------------------------------------------------
+- name: Append hosts to /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    insertafter: EOF
+    block: "{{ lookup('template', 'hosts.j2') }}"
+
+#------------------------------------------------------------------------------
+# Create pgpass
+#------------------------------------------------------------------------------
+- name: Create an initial pgpass file on hosts
+  lineinfile:
+    path: "{{ user.home_directory }}/.pgpass"
+    line: "# hostname:port:database:username:password"
+    create: yes
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0600
+
+#------------------------------------------------------------------------------
+# Create SSH keys
+#------------------------------------------------------------------------------
+- name: Generate a SSH key pair
+  user:
+    name: "{{ user.name }}"
+    generate_ssh_key: yes
+  register: ssh_keypair
+  when: user.group in group_names
+
+#------------------------------------------------------------------------------
+# SELinux
+#------------------------------------------------------------------------------
+- name: Adjust SELinux context for SSH
+  shell: restorecon -irv {{ user.home_directory }}/.ssh
+  when: ansible_selinux.status == "enabled"
+
+#------------------------------------------------------------------------------
+# Exchange SSH keys between hosts
+#------------------------------------------------------------------------------
+- name: Add postgres SSH keys to barman authorized_key
+  authorized_key:
+    user: "{{ user.name }}"
+    key: "{{ hostvars[item].ssh_keypair.ssh_public_key }}"
+    state: present
+  loop: "{{ groups['postgres'] }}"
+  when: inventory_hostname in groups['barman']
+
+- name: Add barman SSH keys to postgres authorized_key
+  authorized_key:
+    user: "{{ user.name }}"
+    key: "{{ hostvars[item].ssh_keypair.ssh_public_key }}"
+    state: present
+  loop: "{{ groups['barman'] }}"
+  when: inventory_hostname in groups['postgres']
+
+#------------------------------------------------------------------------------
+# Adjust known_hosts
+#------------------------------------------------------------------------------
+- name: Gather SSH key from hosts
+  shell: ssh-keyscan -t rsa {{ item }} {{ hostvars[item].ansible_host }}
+  register: ssh_known_hosts
+  loop: "{{ groups['all'] }}"
+  when: inventory_hostname != item
+
+- name: Generate known_hosts on hosts
+  lineinfile:
+    path: "{{ user.home_directory }}/.ssh/known_hosts"
+    line: "{{ item  | join('\n') }}"
+    create: yes
+    group: "{{ user.group }}"
+    owner: "{{ user.name }}"
+    state: present
+  loop:
+    - "{{ ssh_known_hosts | json_query('results[*].stdout') }}"

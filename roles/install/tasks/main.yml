@@ -16,8 +16,16 @@
 
 - name: Configure system (access and SSH)
   include_tasks:
-    file: configure_system.yml
+    file: configure_system_ssh.yml
     apply:
       tags:
-        - system
-  tags: system
+        - ssh
+  tags: ssh
+
+# - name: Configure system (users shell)
+#   include_tasks:
+#     file: configure_system_users.yml
+#     apply:
+#       tags:
+#         - shell
+#   tags: shell
