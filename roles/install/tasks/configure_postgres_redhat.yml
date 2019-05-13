@@ -5,8 +5,8 @@
 - name: Ensure postgres.log exists | RPM
   file:
     path: "{{ pg_log_file }}"
-    owner: "{{ pg_user }}"
-    group: "{{ pg_group }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
     mode: 0640
     state: touch
 
