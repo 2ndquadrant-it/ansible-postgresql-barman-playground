@@ -1,0 +1,5 @@
+---
+user:
+  name: barman
+  group: barman
+  home_directory: /var/lib/barman
