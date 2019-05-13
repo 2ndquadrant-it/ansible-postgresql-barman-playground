@@ -3,8 +3,8 @@
 # Repositories for PostgreSQL and others
 #------------------------------------------------------------------------------
 # 2ndQuadrant's General Public repository
-repo_2ndq_file: /etc/apt/sources.list.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level }}.list
-repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level }}/get/deb
+repo_2ndq_file: /etc/apt/sources.list.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level | default('release') }}.list
+repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level | default('release') }}/get/deb
 
 # PostgreSQL Apt repository
 pg_apt_repo_key: https://www.postgresql.org/media/keys/ACCC4CF8.asc
@@ -18,8 +18,8 @@ pg_packages:
   - "postgresql-{{ pgversion }}"
   - "postgresql-client-{{ pgversion }}"
   - "postgresql-contrib-{{ pgversion }}"
-  - rsync
   - barman-cli
+  - rsync
   - vim
 
 barman_packages:

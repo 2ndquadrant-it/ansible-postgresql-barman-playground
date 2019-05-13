@@ -2,28 +2,17 @@
 #------------------------------------------------------------------------------
 # Basic PostgreSQL settings
 #------------------------------------------------------------------------------
-# PostgreSQL version
+# Enter the PostgreSQL version to be installed
 pgversion: 11
-pgversion_plain: "{{ pgversion | replace('.', '') }}"
-repo_2ndq_maturity_level: release
 
-# PostgreSQL port
-pg_port: 5432
+# By default, only stable packages from 2ndQuadrant repository are installed.
+# Uncomment the next line to use snapshot packages instead of stable releases.
+#repo_2ndq_maturity_level: snapshot
 
-# Directories & cluster
+# Where postgres log files are kept
 pg_log_file: /var/log/postgres.log
 
-# Locale
-pg_encoding: UTF-8
-pg_locale: en_US.UTF-8
-pg_timezone: Europe/London
-
-# Users & groups
-pg_user: postgres
-pg_group: "{{ pg_user }}"
-
-barman_user: barman
-
+# Users for replication
 replication_user:
   postgres: repuser
   barman: streaming_barman
@@ -32,7 +21,7 @@ replication_user:
 pg_hba_method: md5
 
 #------------------------------------------------------------------------------
-# postgresql.conf variables
+# postgresql.conf settings
 #------------------------------------------------------------------------------
 postgresql_conf: |
     ### network settings

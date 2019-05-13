@@ -3,11 +3,14 @@
 # Repositories for PostgreSQL and others
 #------------------------------------------------------------------------------
 # 2ndQuadrant's General Public repository
-repo_2ndq_file: /etc/yum.repos.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level }}-pg{{ pgversion }}.repo
-repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level }}/get/{{ pgversion }}/rpm
+repo_2ndq_file: /etc/yum.repos.d/2ndquadrant-dl-default-{{ repo_2ndq_maturity_level | default('release') }}-pg{{ pgversion }}.repo
+repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level | default('release') }}/get/{{ pgversion }}/rpm
 
 # EPEL
 epel_repo: epel-release
+
+# Required for following Postgres package format on RedHat
+pgversion_plain: "{{ pgversion | replace('.', '') }}"
 
 # PostgreSQL Yum Repository
 pg_rpm_repo_package_release:
@@ -35,8 +38,8 @@ pg_packages:
   - "postgresql{{ pgversion_plain }}-server"
   - "postgresql{{ pgversion_plain }}-contrib"
   - "postgresql{{ pgversion_plain }}-devel"
-  - rsync
   - barman-cli
+  - rsync
   - vim
 
 barman_packages:

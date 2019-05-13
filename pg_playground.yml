@@ -2,8 +2,6 @@
 - name: 'PostgreSQL & Barman Playground'
   hosts: all
   become: yes
-  vars:
-    repo_2ndq_maturity_level: snapshot
 
   tasks:
     - name: Install repos and packages
