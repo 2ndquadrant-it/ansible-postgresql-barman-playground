@@ -1,0 +1,52 @@
+---
+#------------------------------------------------------------------------------
+# Customization of linux shell (.bashrc)
+#------------------------------------------------------------------------------
+- name: Adjust .bash_profile for users postgres and barman
+  blockinfile:
+    path: "{{ user.home_directory }}/.bash_profile"
+    insertafter: EOF
+    create: yes
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0644
+    block: |
+      if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+
+- name: Adjust .bashrc for users postgres and barman
+  template:
+    src: bashrc.j2
+    dest: "{{ user.home_directory }}/.bashrc"
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0644
+
+#------------------------------------------------------------------------------
+# Customization of postgres shell (.psqlrc)
+#------------------------------------------------------------------------------
+- block:
+    - name: Create a .psqlrc for the user postgres
+      copy:
+        src: psqlrc
+        dest: "{{ user.home_directory }}/.psqlrc"
+        owner: "{{ user.name }}"
+        group: "{{ user.group }}"
+        mode: 0644
+
+#------------------------------------------------------------------------------
+# Create pgbench database and initialize it
+#------------------------------------------------------------------------------
+    - name: Create pgbench database
+      postgresql_db:
+        name: pgbench
+
+    - name: Check if pgbench database is empty
+      shell: psql pgbench -c "\d"
+      register: pgbench_empty
+
+    - name: Initialize pgbench database
+      shell: "{{ pg_bin_directory }}/pgbench -i -s 10 --foreign-keys pgbench"
+      when: >-
+        'Did not find any relations' in pgbench_empty.stderr
+  become_user: postgres
+  when: inventory_hostname in groups['postgres']

@@ -22,10 +22,10 @@
         - ssh
   tags: ssh
 
-# - name: Configure system (users shell)
-#   include_tasks:
-#     file: configure_system_users.yml
-#     apply:
-#       tags:
-#         - shell
-#   tags: shell
+- name: Configure system (users and pgbench)
+  include_tasks:
+    file: configure_system_shell.yml
+    apply:
+      tags:
+        - shell
+  tags: shell

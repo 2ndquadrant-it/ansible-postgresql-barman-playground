@@ -41,6 +41,6 @@ pg_service: postgresql
 #------------------------------------------------------------------------------
 # PostgreSQL bin directories
 #------------------------------------------------------------------------------
-pg_bin_directory: /usr/bin
+pg_bin_directory: "/usr/lib/postgresql/{{ pgversion }}/bin"
 pg_data_directory: "/var/lib/postgresql/{{ pgversion }}/main"
 pg_conf_directory: "/etc/postgresql/{{ pgversion }}/main"
