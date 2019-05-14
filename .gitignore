@@ -1,5 +1,5 @@
-.vagrant
+.vagrant/
 .DS_Store
-.pyc
+*.pyc
 .python-version
-__pycache__
+__pycache__/
