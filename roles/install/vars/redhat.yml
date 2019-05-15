@@ -43,6 +43,7 @@ pg_packages:
   - vim
   - pwgen
   - screen
+  - asciinema
 
 barman_packages:
   - barman
@@ -51,6 +52,7 @@ barman_packages:
   - vim
   - pwgen
   - screen
+  - asciinema
 
 dependency_packages:
   - python-psycopg2
