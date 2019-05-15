@@ -21,12 +21,16 @@ pg_packages:
   - barman-cli
   - rsync
   - vim
+  - pwgen
+  - screen
 
 barman_packages:
   - barman
   - "postgresql-client-{{ pgversion }}"
   - rsync
   - vim
+  - pwgen
+  - screen
 
 dependency_packages:
   - python-psycopg2
