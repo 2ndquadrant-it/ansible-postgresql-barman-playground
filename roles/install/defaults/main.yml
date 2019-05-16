@@ -56,5 +56,7 @@ postgresql_conf: |
     hot_standby_feedback = on
 
     ### wal archiving
+    archive_timeout = 5min
     archive_mode = on
     archive_command = '/bin/true'
+
