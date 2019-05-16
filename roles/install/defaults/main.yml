@@ -57,6 +57,6 @@ postgresql_conf: |
 
     ### wal archiving
     archive_timeout = 5min
-    archive_mode = on
+    archive_mode = always
     archive_command = '/bin/true'
 
