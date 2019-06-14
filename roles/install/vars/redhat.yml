@@ -9,30 +9,15 @@ repo_2ndq: https://dl.2ndquadrant.com/default/{{ repo_2ndq_maturity_level | defa
 # EPEL
 epel_repo: epel-release
 
-# Required for following Postgres package format on RedHat
-pgversion_plain: "{{ pgversion | replace('.', '') }}"
-
 # PostgreSQL Yum Repository
-pg_rpm_repo_package_release:
-  redhat: {
-      9.6: 3,
-      10: 2,
-      11: 2,
-  }
-  centos: {
-      9.6: 3,
-      10: 2,
-      11: 2,
-  }
-
-pg_rpm_repo_package: "pgdg-{{ ansible_distribution | lower }}{{ pgversion_plain }}-{{ pgversion }}-{{ pg_rpm_repo_package_release.get(ansible_distribution | lower).get(pgversion) }}.noarch.rpm"
-
-pg_rpm_repo_url: https://download.postgresql.org/pub/repos/yum
-pg_rpm_repo: "{{ pg_rpm_repo_url }}/{{ pgversion }}/{{ ansible_os_family | lower }}/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/{{ pg_rpm_repo_package }}"
+pg_rpm_repo: https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/pgdg-redhat-repo-latest.noarch.rpm
 
 #------------------------------------------------------------------------------
 # PostgreSQL and dependency packages to be installed
 #------------------------------------------------------------------------------
+# Required for following Postgres package format on RedHat
+pgversion_plain: "{{ pgversion | replace('.', '') }}"
+
 pg_packages:
   - "postgresql{{ pgversion_plain }}"
   - "postgresql{{ pgversion_plain }}-server"
