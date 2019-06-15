@@ -1,2 +1,2 @@
-ansible
+ansible==2.7.10
 jmespath
