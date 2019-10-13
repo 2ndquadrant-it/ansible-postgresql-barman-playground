@@ -45,7 +45,7 @@
     user: "{{ user.name }}"
     key: "{{ hostvars[item].ssh_keypair.ssh_public_key }}"
     state: present
-  loop: "{{ groups['postgres'] }}"
+  loop: "{{ groups['postgres'] | intersect(ansible_play_hosts) }}"
   when: inventory_hostname in groups['barman']
 
 - name: Add barman SSH keys to postgres authorized_key
@@ -53,7 +53,7 @@
     user: "{{ user.name }}"
     key: "{{ hostvars[item].ssh_keypair.ssh_public_key }}"
     state: present
-  loop: "{{ groups['barman'] }}"
+  loop: "{{ groups['barman'] | intersect(ansible_play_hosts) }}"
   when: inventory_hostname in groups['postgres']
 
 #------------------------------------------------------------------------------
@@ -62,7 +62,7 @@
 - name: Gather SSH key from hosts
   shell: ssh-keyscan -t rsa {{ item }} {{ hostvars[item].ansible_host }}
   register: ssh_known_hosts
-  loop: "{{ groups['all'] }}"
+  loop: "{{ groups['all'] | intersect(ansible_play_hosts) }}"
   when: inventory_hostname != item
 
 - name: Generate known_hosts on hosts
