@@ -37,7 +37,6 @@ Vagrant.configure("2") do |config|
     'ringo'  => '192.168.33.13',
   }.each do |short_name, ip|
     config.vm.define short_name do |host|
-      #host.vm.box = "centos/7"
       host.vm.box = "bento/centos-7"
       host.vm.hostname = "#{short_name}"
       host.vm.network :private_network, ip: ip
