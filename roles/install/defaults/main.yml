@@ -3,7 +3,7 @@
 # Basic PostgreSQL settings
 #------------------------------------------------------------------------------
 # Enter the PostgreSQL version to be installed
-pgversion: 11
+pgversion: 12
 
 # By default, only stable packages from 2ndQuadrant repository are installed.
 # Uncomment the next line to use snapshot packages instead of stable releases.
@@ -59,4 +59,3 @@ postgresql_conf: |
     archive_timeout = 5min
     archive_mode = always
     archive_command = '/bin/true'
-
